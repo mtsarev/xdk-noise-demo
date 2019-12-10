@@ -1,0 +1,21 @@
+version: '2'
+
+services:
+  xdk-example:
+    restart: always
+    image: xdk-example
+    container_name: xdk.tsarev.de
+    environment:
+      - VIRTUAL_HOST=CHANGEME
+      - LETSENCRYPT_HOST=CHANGEME
+      - HTTPS_METHOD=nohttps
+      - FLASK_DEBUG=1
+      - FLASK_ENV=development
+      - FLASK_APP=app.py
+    expose:
+      - 80
+    entrypoint:
+      - python
+      - app.py
+    networks:
+      default:

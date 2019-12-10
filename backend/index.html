@@ -1,0 +1,70 @@
+
+<html>
+<head>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js" integrity="sha256-xKeoJ50pzbUGkpQxDYHD7o7hxe0LaOGeguUidbq6vis=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-streaming@latest/dist/chartjs-plugin-streaming.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.css" integrity="sha256-aa0xaJgmK/X74WM224KMQeNQC2xYKwlAt08oZqjeF0E=" crossorigin="anonymous" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+</head>
+<body>
+<canvas id="myChart" width="800px" height="500px"></canvas>
+<script>
+var ctx = document.getElementById('myChart').getContext('2d');
+var chartColors = {
+	red: 'rgb(255, 99, 132)',
+	orange: 'rgb(255, 159, 64)',
+	yellow: 'rgb(255, 205, 86)',
+	green: 'rgb(75, 192, 192)',
+	blue: 'rgb(54, 162, 235)',
+	purple: 'rgb(153, 102, 255)',
+	grey: 'rgb(201, 203, 207)',
+    black: 'rgb(0, 0, 0)',
+};
+var chart = new Chart(ctx, {
+
+  type: 'line',
+  data: {
+    datasets: [{
+      label: 'Sensor value',
+      backgroundColor: chartColors.blue,
+      borderColor: chartColors.blue,
+      fill: false,
+      data: []
+    }]
+  },
+
+  options: {
+    responsive: false,
+    maintainAspectRatio: false,
+    scales: {
+      xAxes: [{
+        type: 'realtime',
+        realtime: {
+          duration: 60000,
+          delay: 1000,  
+          onRefresh: function(chart) {
+          }
+        }
+      }]
+    }
+  }
+});
+
+var socket = io();
+socket.on('data', function (data) {
+    console.log(data);
+
+    chart.data.datasets[0].data.push({
+        x: Date.now(),
+        y: data.value
+    });
+
+    chart.update({
+        preservation: true
+    });
+
+});
+
+</script>
+</body>
+</html>
