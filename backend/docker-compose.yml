@@ -3,8 +3,8 @@ version: '2'
 services:
   xdk-example:
     restart: always
-    image: xdk-example
-    container_name: xdk.tsarev.de
+    image: xdk-noise-demo
+    container_name: xdk-noise-demo
     environment:
       - VIRTUAL_HOST=CHANGEME
       - LETSENCRYPT_HOST=CHANGEME
